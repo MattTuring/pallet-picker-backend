@@ -114,4 +114,21 @@ describe('Server', () => {
       });
     });
   });
+
+  describe("Pallets", () => {
+    describe('GET /api/v1/pallets', () => {
+      it('should return a 200 and all of the pallets', async () => {
+        // setup
+        const receivedPallets = await database('pallets').select();
+        const expectedPallets = JSON.parse(JSON.stringify(receivedPallets));
+        // execution
+        const res = await request(app).get('/api/v1/pallets');
+        const pallets = res.body;
+
+        // expectation
+        expect(res.status).toBe(200);
+        expect(pallets).toEqual(expectedPallets);
+      });
+    });
+  });
 });
