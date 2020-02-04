@@ -52,5 +52,28 @@ describe('Server', () => {
         expect(response.body.error).toEqual(`Could not find project with id ${invalidID}`);
       });
     });
+
+    describe('POST /api/v1/projects', () => {
+      it('should post a new project to the db', async () => {
+        const newProject = { name: 'New Socks' };
+
+        const res = await request(app).post('/api/v1/projects').send(newProject);
+        const projects = await database('projects').where('name', res.body.name);
+
+        const [ project ] = projects;
+
+        expect(res.status).toBe(201);
+        expect(project.name).toEqual(newProject.name);
+      });
+
+      it('should return a 422 and the message "Expected format: { name: <String> }. You\'re missing a "name" property."', async () => {
+        const newProject = { };
+
+        const res = await request(app).post('/api/v1/projects').send(newProject);
+
+        expect(res.status).toBe(422);
+        expect(res.body.error).toEqual('Expected format: { name: <String> }. You\'re missing a "name" property.');
+      });
+    });
   });
 });
