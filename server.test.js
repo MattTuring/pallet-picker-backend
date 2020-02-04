@@ -115,53 +115,53 @@ describe('Server', () => {
     });
   });
 
-  describe("Pallets", () => {
-    describe('GET /api/v1/pallets', () => {
-      it('should return a 200 and all of the pallets', async () => {
+  describe("Palettes", () => {
+    describe('GET /api/v1/palettes', () => {
+      it('should return a 200 and all of the palettes', async () => {
         // setup
-        const receivedPallets = await database('pallets').select();
-        const expectedPallets = JSON.parse(JSON.stringify(receivedPallets));
+        const receivedPalettes = await database('palettes').select();
+        const expectedPalettes = JSON.parse(JSON.stringify(receivedPalettes));
         // execution
-        const res = await request(app).get('/api/v1/pallets');
-        const pallets = res.body;
+        const res = await request(app).get('/api/v1/palettes');
+        const palettes = res.body;
 
         // expectation
         expect(res.status).toBe(200);
-        expect(pallets).toEqual(expectedPallets);
+        expect(palettes).toEqual(expectedPalettes);
       });
     });
 
-    describe('GET /api/v1/pallets/:id', () => {
-      it('should return a 200 and a single pallet if the pallet exists', async () => {
+    describe('GET /api/v1/palettes/:id', () => {
+      it('should return a 200 and a single palette if the palette exists', async () => {
         // setup
-        const receivedPallet = await database('pallets').first();
-        const { id } = receivedPallet;
-        const expectedPallet = JSON.parse(JSON.stringify(receivedPallet))
+        const receivedPalette = await database('palettes').first();
+        const { id } = receivedPalette;
+        const expectedPalette = JSON.parse(JSON.stringify(receivedPalette))
 
         // execution
-        const res = await request(app).get(`/api/v1/pallets/${id}`);
+        const res = await request(app).get(`/api/v1/palettes/${id}`);
         const result = res.body;
 
         // expectation
         expect(res.status).toBe(200);
-        expect(result).toEqual(expectedPallet);
+        expect(result).toEqual(expectedPalette);
       });
 
-      it('should return a 404 and the message "Could not find pallet with id"', async () => {
+      it('should return a 404 and the message "Could not find palette with id"', async () => {
         const invalidID = -1;
 
-        const response = await request(app).get(`/api/v1/pallets/${invalidID}`);
+        const response = await request(app).get(`/api/v1/palettes/${invalidID}`);
 
         expect(response.status).toBe(404);
-        expect(response.body.error).toEqual(`Could not find pallet with id ${invalidID}`);
+        expect(response.body.error).toEqual(`Could not find palette with id ${invalidID}`);
       });
     });
 
-    describe('POST /api/v1/pallets', () => {
-      it('should post a new pallet to the db', async () => {
+    describe('POST /api/v1/palettes', () => {
+      it('should post a new palette to the db', async () => {
         const { id } = await database('projects').first();
 
-        const newPallet = {
+        const newPalette = {
           name: 'Banana',
           color1: '#D2B122',
           color2: '#7EA93E',
@@ -171,61 +171,61 @@ describe('Server', () => {
           project_id: id
         };
 
-        const res = await request(app).post('/api/v1/pallets').send(newPallet);
-        const pallets = await database('pallets').where('name', res.body.name);
+        const res = await request(app).post('/api/v1/palettes').send(newPalette);
+        const palettes = await database('palettes').where('name', res.body.name);
 
-        const [ pallet ] = pallets;
+        const [ palette ] = palettes;
 
         expect(res.status).toBe(201);
-        expect(pallet.name).toEqual(newPallet.name);
+        expect(palette.name).toEqual(newPalette.name);
       });
 
       it('should return a 422 and the message "Expected format: { name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String>, peoject_id: <Number> }. You\'re missing a "color1" property."', async () => {
-        const newPallet = {
+        const newPalette = {
           name: 'Banana'
         };
 
-        const res = await request(app).post('/api/v1/pallets').send(newPallet);
+        const res = await request(app).post('/api/v1/palettes').send(newPalette);
 
         expect(res.status).toBe(422);
         expect(res.body.error).toEqual('Expected format: { name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String>, peoject_id: <Number> }. You\'re missing a "color1" property.');
       });
     });
 
-    describe('PUT /api/v1/pallets/:id', () => {
-      it('should update a pallet in the db', async () => {
-        const { id } = await database('pallets').first();
+    describe('PUT /api/v1/palettes/:id', () => {
+      it('should update a palette in the db', async () => {
+        const { id } = await database('palettes').first();
 
-        const updatedPallet = {
+        const updatedPalette = {
           name: 'Banana colors'
         };
 
-        const res = await request(app).put(`/api/v1/pallets/${id}`).send(updatedPallet);
-        const pallet = res.body;
+        const res = await request(app).put(`/api/v1/palettes/${id}`).send(updatedPalette);
+        const palette = res.body;
 
         expect(res.status).toBe(202)
-        expect(pallet.name).toEqual(updatedPallet.name)
+        expect(palette.name).toEqual(updatedPalette.name)
       });
 
       it('should return a 422 and the message "Expected format: { key: <Value> }. You\'ve not added any data to change." if there is no data', async () => {
-        const { id } = await database('pallets').first();
+        const { id } = await database('palettes').first();
 
-        const updatedPallet = { };
+        const updatedPalette = { };
 
-        const res = await request(app).put('/api/v1/pallets/${id}').send(updatedPallet);
+        const res = await request(app).put('/api/v1/palettes/${id}').send(updatedPalette);
 
         expect(res.status).toBe(422);
         expect(res.body.error).toEqual('Expected format: { key: <Value> }. You\'ve not added any data to change.');
       });
     });
 
-    describe('DELETE /api/v1/pallets/:id', () => {
-      it('should return a 203 and the message with result "Pallet was deleted!"', async () => {
-        const deletedPallet = await database('pallets').first();
-        const { id } = deletedPallet;
-        const expectedResult = 'Pallet was deleted!';
+    describe('DELETE /api/v1/palettes/:id', () => {
+      it('should return a 203 and the message with result "Palette was deleted!"', async () => {
+        const deletedPalette = await database('palettes').first();
+        const { id } = deletedPalette;
+        const expectedResult = 'Palette was deleted!';
 
-        const res = await request(app).delete(`/api/v1/pallets/${id}`);
+        const res = await request(app).delete(`/api/v1/palettes/${id}`);
 
         expect(res.status).toBe(203)
         expect(res.body.result).toEqual(expectedResult)
