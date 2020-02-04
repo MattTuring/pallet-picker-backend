@@ -42,6 +42,23 @@ app.get('/api/v1/projects/:id', async (request, response) => {
   }
 });
 
+app.post('/api/v1/projects', async (request, response) => {
+  const project = request.body;
+
+  if (!project.name) {
+    return response
+      .status(422)
+      .send({ error: `Expected format: { name: <String> }. You're missing a "name" property.` });
+  }
+
+  try {
+    const id = await database('projects').insert(project, 'id');
+    response.status(201).json(project)
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
+
 app.listen(app.get('port'), () => {
   console.log('running');
 });
