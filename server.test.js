@@ -192,5 +192,32 @@ describe('Server', () => {
       });
     });
 
+    describe('PUT /api/v1/pallets/:id', () => {
+      it('should update a pallet in the db', async () => {
+        const { id } = await database('pallets').first();
+
+        const updatedPallet = {
+          name: 'Banana colors'
+        };
+
+        const res = await request(app).put(`/api/v1/pallets/${id}`).send(updatedPallet);
+        const pallet = res.body;
+
+        expect(res.status).toBe(202)
+        expect(pallet.name).toEqual(updatedPallet.name)
+      });
+
+      it('should return a 422 and the message "Expected format: { key: <Value> }. You\'ve not added any data to change." if there is no data', async () => {
+        const { id } = await database('pallets').first();
+
+        const updatedPallet = { };
+
+        const res = await request(app).put('/api/v1/pallets/${id}').send(updatedPallet);
+
+        expect(res.status).toBe(422);
+        expect(res.body.error).toEqual('Expected format: { key: <Value> }. You\'ve not added any data to change.');
+      });
+    });
+
   });
 });
