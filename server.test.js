@@ -130,5 +130,32 @@ describe('Server', () => {
         expect(pallets).toEqual(expectedPallets);
       });
     });
+
+    describe('GET /api/v1/pallets/:id', () => {
+      it('should return a 200 and a single pallet if the pallet exists', async () => {
+        // setup
+        const receivedPallet = await database('pallets').first();
+        const { id } = receivedPallet;
+        const expectedPallet = JSON.parse(JSON.stringify(receivedPallet))
+
+        // execution
+        const res = await request(app).get(`/api/v1/pallets/${id}`);
+        const result = res.body;
+
+        // expectation
+        expect(res.status).toBe(200);
+        expect(result).toEqual(expectedPallet);
+      });
+
+      it('should return a 404 and the message "Could not find pallet with id"', async () => {
+        const invalidID = -1;
+
+        const response = await request(app).get(`/api/v1/pallets/${invalidID}`);
+
+        expect(response.status).toBe(404);
+        expect(response.body.error).toEqual(`Could not find pallet with id ${invalidID}`);
+      });
+    });
+
   });
 });
