@@ -219,5 +219,17 @@ describe('Server', () => {
       });
     });
 
+    describe('DELETE /api/v1/pallets/:id', () => {
+      it('should return a 203 and the message with result "Pallet was deleted!"', async () => {
+        const deletedPallet = await database('pallets').first();
+        const { id } = deletedPallet;
+        const expectedResult = 'Pallet was deleted!';
+
+        const res = await request(app).delete(`/api/v1/pallets/${id}`);
+
+        expect(res.status).toBe(203)
+        expect(res.body.result).toEqual(expectedResult)
+      });
+    });
   });
 });
