@@ -5,7 +5,7 @@ const pallets = [{
   color3: '#FF5733',
   color4: '#C70039',
   color5: '#581845',
-  project_id: 11
+  project_id: 1
 }, {
   name: 'Cold Weather',
   color1: '#DAF7A5',
@@ -13,7 +13,7 @@ const pallets = [{
   color3: '#FF5732',
   color4: '#C70038',
   color5: '#581844',
-  project_id: 11
+  project_id: 1
 }];
 
 module.exports = pallets;

@@ -5,14 +5,14 @@ const palletsData = require('../../../data/pallets');
 exports.seed = async (knex) => {
   try {
     await knex('projects').del();
-    await knex('pallets').del();
+    await knex('palettes').del();
 
     let projectsPromises = projectsData.map(project => {
       return knex('projects').insert(project);
     });
 
     let palletsPromises = palletsData.map(pallet => {
-      return knex('pallets').insert(pallet);
+      return knex('palettes').insert(pallet);
     });
 
     let all = [...projectsPromises, ...palletsPromises]

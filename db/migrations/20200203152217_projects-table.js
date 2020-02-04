@@ -6,7 +6,7 @@ exports.up = function(knex) {
       table.timestamps(true, true);
     })
 
-    .createTable('pallets', function (table) {
+    .createTable('palettes', function (table) {
       table.increments('id').primary();
       table.string('name');
       table.string('color1');
@@ -23,6 +23,6 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-      .dropTable('pallets')
+      .dropTable('palettes')
       .dropTable('projects')
 };
