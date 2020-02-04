@@ -76,6 +76,15 @@ app.put('/api/v1/projects/:id', async (request, response) => {
   }
 });
 
+app.delete('/api/v1/projects/:id', async (request, response) => {
+  try {
+    await database('projects').where('id', request.params.id).del();
+    response.status(203).json({result: 'Project was deleted!'});
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
+
 app.listen(app.get('port'), () => {
   console.log('running');
 });
