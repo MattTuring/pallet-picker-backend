@@ -75,5 +75,31 @@ describe('Server', () => {
         expect(res.body.error).toEqual('Expected format: { name: <String> }. You\'re missing a "name" property.');
       });
     });
+
+    describe('PUT /api/v1/projects/:id', () => {
+      it('should update a project in the db', async () => {
+        const expectedProject = await database('projects').first();
+        const { id } = expectedProject;
+        const updatedProject = { name: 'Logo for app' };
+
+        const res = await request(app).put(`/api/v1/projects/${id}`).send(updatedProject);
+        const project = res.body;
+
+        expect(res.status).toBe(202)
+        expect(project.name).toEqual(updatedProject.name)
+      });
+
+      it('should return a 422 and the message "Expected format: { name: <String> }. You\'re missing a "name" property." if there is no data', async () => {
+        const { id } = await database('projects').first();
+
+        const updatedProject = { };
+
+        const res = await request(app).put('/api/v1/projects/${id}').send(updatedProject);
+
+        expect(res.status).toBe(422);
+        expect(res.body.error).toEqual('Expected format: { name: <String> }. You\'re missing a "name" property.');
+      });
+    });
+
   });
 });
