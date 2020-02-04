@@ -101,5 +101,17 @@ describe('Server', () => {
       });
     });
 
+    describe('DELETE /api/v1/projects/:id', () => {
+      it('should return a 203 and the message with result "Project was deleted!"', async () => {
+        const deletedProject = await database('projects').first();
+        const { id } = deletedProject;
+        const expectedResult = 'Project was deleted!';
+
+        const res = await request(app).delete(`/api/v1/projects/${id}`);
+
+        expect(res.status).toBe(203)
+        expect(res.body.result).toEqual(expectedResult)
+      });
+    });
   });
 });
