@@ -26,6 +26,32 @@ app.get('/api/v1/projects', async (request, response) => {
   }
 });
 
+app.get('/api/v1/pallets', async (request, response) => {
+  try {
+    const projects = await database('pallets').select();
+    response.status(200).json(pallets);
+  }
+  catch(error) {
+    response.status(500).json({ error });
+  }
+});
+
+app.get('/api/v1/pallets/:id', async (request, response) => {
+  try {
+    const pallets = await database('pallets').where('id', request.params.id).select();
+    const [ pallet ] = pallets;
+    if (!pallets.length) {
+      return response.status(404).json({
+        error: `Could not find pallet with id ${request.params.id}`
+      });
+    }
+    return response.status(200).json(pallet);
+  }
+  catch(error) {
+    response.status(500).json({ error });
+  }
+});
+
 app.get('/api/v1/projects/:id', async (request, response) => {
   try {
     const projects = await database('projects').where('id', request.params.id).select();
@@ -59,6 +85,25 @@ app.post('/api/v1/projects', async (request, response) => {
   }
 });
 
+app.post('/api/v1/pallets', async (request, response) => {
+  const pallet = request.body;
+
+  for (let requiredParameter of ['name', 'color1', 'color2', 'color3', 'color4', 'color5', 'project_id']) {
+      if (!pallet[requiredParameter]) {
+        return response
+          .status(422)
+          .send({ error: `Expected format: { title: <String>, author: <String> }. You're missing a "${requiredParameter}" property.` });
+      }
+    }
+
+  try {
+    const id = await database('pallets').insert(pallet, 'id');
+    response.status(201).json(pallet)
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
+
 app.put('/api/v1/projects/:id', async (request, response) => {
   const project = request.body;
 
@@ -76,6 +121,25 @@ app.put('/api/v1/projects/:id', async (request, response) => {
   }
 });
 
+app.put('/api/v1/pallets/:id', async (request, response) => {
+  const pallet = request.body;
+
+  for (let requiredParameter of ['name', 'color1', 'color2', 'color3', 'color4', 'color5', 'project_id']) {
+      if (!pallet[requiredParameter]) {
+        return response
+          .status(422)
+          .send({ error: `Expected format: { title: <String>, author: <String> }. You're missing a "${requiredParameter}" property.` });
+      }
+    }
+
+  try {
+    const id = await database('pallets').where('id', request.params.id).update(pallet);
+    response.status(202).json({result: 'Pallet was updated!'})
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
+
 app.delete('/api/v1/projects/:id', async (request, response) => {
   try {
     await database('projects').where('id', request.params.id).del();
@@ -85,6 +149,14 @@ app.delete('/api/v1/projects/:id', async (request, response) => {
   }
 });
 
+app.delete('/api/v1/pallets/:id', async (request, response) => {
+  try {
+    await database('pallets').where('id', request.params.id).del();
+    response.status(203).json({result: 'Pallet was deleted!'});
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
 app.listen(app.get('port'), () => {
   console.log('running');
 });
