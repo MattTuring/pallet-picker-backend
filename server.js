@@ -135,7 +135,7 @@ app.put('/api/v1/palettes/:id', async (request, response) => {
 
   try {
     const id = await database('palettes').where('id', request.params.id).update(palette);
-    response.status(202).json({result: 'palette was updated!'})
+    response.status(202).json({result: 'Palette was updated!'})
   } catch (error) {
     response.status(500).json({ error });
   }
@@ -153,7 +153,7 @@ app.delete('/api/v1/projects/:id', async (request, response) => {
 app.delete('/api/v1/palettes/:id', async (request, response) => {
   try {
     await database('palettes').where('id', request.params.id).del();
-    response.status(203).json({result: 'palette was deleted!'});
+    response.status(203).json({result: 'Palette was deleted!'});
   } catch (error) {
     response.status(500).json({ error });
   }
