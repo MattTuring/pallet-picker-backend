@@ -1,6 +1,7 @@
 const projectsData = require('../../../data/projects');
 const palletsData = require('../../../data/pallets');
 
+
 exports.seed = async (knex) => {
   try {
     await knex('projects').del();

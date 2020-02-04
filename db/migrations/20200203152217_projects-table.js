@@ -5,6 +5,7 @@ exports.up = function(knex) {
       table.string('name');
       table.timestamps(true, true);
     })
+
     .createTable('pallets', function (table) {
       table.increments('id').primary();
       table.string('name');
@@ -17,6 +18,7 @@ exports.up = function(knex) {
       table.foreign('project_id').references('projects.id')
       table.timestamps(true, true);
     })
+
 };
 
 exports.down = function(knex) {
