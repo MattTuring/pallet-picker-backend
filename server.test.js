@@ -157,5 +157,40 @@ describe('Server', () => {
       });
     });
 
+    describe('POST /api/v1/pallets', () => {
+      it('should post a new pallet to the db', async () => {
+        const { id } = await database('projects').first();
+
+        const newPallet = {
+          name: 'Banana',
+          color1: '#D2B122',
+          color2: '#7EA93E',
+          color3: '#2F9760',
+          color4: '#005246',
+          color5: '#8F7D4B',
+          project_id: id
+        };
+
+        const res = await request(app).post('/api/v1/pallets').send(newPallet);
+        const pallets = await database('pallets').where('name', res.body.name);
+
+        const [ pallet ] = pallets;
+
+        expect(res.status).toBe(201);
+        expect(pallet.name).toEqual(newPallet.name);
+      });
+
+      it('should return a 422 and the message "Expected format: { name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String>, peoject_id: <Number> }. You\'re missing a "color1" property."', async () => {
+        const newPallet = {
+          name: 'Banana'
+        };
+
+        const res = await request(app).post('/api/v1/pallets').send(newPallet);
+
+        expect(res.status).toBe(422);
+        expect(res.body.error).toEqual('Expected format: { name: <String>, color1: <String>, color2: <String>, color3: <String>, color4: <String>, color5: <String>, peoject_id: <Number> }. You\'re missing a "color1" property.');
+      });
+    });
+
   });
 });
