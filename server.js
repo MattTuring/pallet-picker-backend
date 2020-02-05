@@ -158,6 +158,7 @@ app.delete('/api/v1/palettes/:id', async (request, response) => {
     response.status(500).json({ error });
   }
 });
+
 app.listen(app.get('port'), () => {
   console.log('running');
 });

@@ -1,22 +1,11 @@
 const projectsData = require('../../../data/projects');
-const palletsData = require('../../../data/pallets');
 
 
 exports.seed = async (knex) => {
   try {
-    await knex('projects').del();
     await knex('palettes').del();
-
-    let projectsPromises = projectsData.map(project => {
-      return knex('projects').insert(project);
-    });
-
-    let palletsPromises = palletsData.map(pallet => {
-      return knex('palettes').insert(pallet);
-    });
-
-    let all = [...projectsPromises, ...palletsPromises]
-    return Promise.all(all);
+    await knex('projects').del();
+    await knex('projects').insert(projectsData);
   }
   catch (error) {
     console.log(`Error seeding data: ${error}`);
