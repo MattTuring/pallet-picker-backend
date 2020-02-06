@@ -68,6 +68,21 @@ app.get('/api/v1/projects/:id', async (request, response) => {
   }
 });
 
+app.get('/api/v1/projects/:id/palettes', async (request, response) => {
+  try {
+    const palettes = await database('palettes').where('project_id', request.params.id).select();
+    if (!palettes.length) {
+      return response.status(404).json({
+        error: `Could not find palettes for project with id ${request.params.id}`
+      });
+    }
+    return response.status(200).json(palettes);
+  }
+  catch(error) {
+    response.status(500).json({ error });
+  }
+});
+
 app.post('/api/v1/projects', async (request, response) => {
   const project = request.body;
 
