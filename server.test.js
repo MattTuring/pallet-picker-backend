@@ -169,6 +169,20 @@ describe('Server', () => {
         expect(res.status).toBe(200);
         expect(palettes).toEqual(expectedPalettes);
       });
+
+      it('should return a 200 and all of the palettes contains color from query', async () => {
+        // setup
+        const color = '%FFC300%';
+        const receivedPalettes = await database('palettes').where('color1', 'like', color).orWhere('color2', 'like', color).orWhere('color3', 'like', color).orWhere('color4', 'like', color).orWhere('color5', 'like', color).select();
+        const expectedPalettes = JSON.parse(JSON.stringify(receivedPalettes));
+        // execution
+        const res = await request(app).get('/api/v1/palettes?color=FFC300');
+        const palettes = res.body;
+
+        // expectation
+        expect(res.status).toBe(200);
+        expect(palettes).toEqual(expectedPalettes);
+      });
     });
 
     describe('GET /api/v1/palettes/:id', () => {
