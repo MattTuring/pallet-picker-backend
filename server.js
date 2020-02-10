@@ -33,6 +33,12 @@ app.get('/api/v1/projects', async (request, response) => {
 
 app.get('/api/v1/palettes', async (request, response) => {
   try {
+    if (request.query.color) {
+      const color = "%" + request.query.color + "%";
+      const palettes = await database('palettes').where('color1', 'like', color).orWhere('color2', 'like', color).orWhere('color3', 'like', color).orWhere('color4', 'like', color).orWhere('color5', 'like', color).select();
+      console.log(palettes);
+      return response.status(200).json(palettes);
+    }
     const palettes = await database('palettes').select();
     response.status(200).json(palettes);
   }
