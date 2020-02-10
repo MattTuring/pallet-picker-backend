@@ -25,6 +25,21 @@ describe('Server', () => {
         expect(res.status).toBe(200);
         expect(projects).toEqual(expectedProjects);
       });
+
+      it('should return a 200 and queried projects if there is query params added', async () => {
+        // setup
+        const name = 'Birthday';
+        const receivedProjects = await database('projects').where('name', 'like', `%${name}%`).select();
+        const expectedProjects = JSON.parse(JSON.stringify(receivedProjects));
+
+        // execution
+        const res = await request(app).get('/api/v1/projects?name=Birthday');
+        const projects = res.body;
+
+        // expectation
+        expect(res.status).toBe(200);
+        expect(projects).toEqual(expectedProjects);
+      });
     });
 
     describe('GET /api/v1/projects/:id', () => {
