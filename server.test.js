@@ -68,6 +68,31 @@ describe('Server', () => {
       });
     });
 
+    describe('GET /api/v1/projects/:id/palettes', () => {
+      it('should return a 200 and the array with all palettes for single project', async () => {
+        // setup
+        const receivedProject = await database('projects').first();
+        const { id } = receivedProject;
+        const projectPalettes = await database('palettes').where('project_id', id).select();
+        const expectedPalettes = JSON.parse(JSON.stringify(projectPalettes))
+        // execution
+        const res = await request(app).get(`/api/v1/projects/${id}/palettes`);
+        const result = res.body;
+        // expectation
+        expect(res.status).toBe(200);
+        expect(result).toEqual(expectedPalettes);
+      });
+
+      it('should return a 404 and the message "Could not find palettes for project with id"', async () => {
+        const invalidID = -1;
+
+        const response = await request(app).get(`/api/v1/projects/${invalidID}/palettes`);
+
+        expect(response.status).toBe(404);
+        expect(response.body.error).toEqual(`Could not find palettes for project with id ${invalidID}`);
+      });
+    });
+
     describe('POST /api/v1/projects', () => {
       it('should post a new project to the db', async () => {
         const newProject = { name: 'New Socks' };
