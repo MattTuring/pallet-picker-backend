@@ -18,6 +18,11 @@ app.set('port', process.env.PORT || 3001);
 
 app.get('/api/v1/projects', async (request, response) => {
   try {
+    if (request.query.name) {
+      const name = "%" + request.query.name + "%";
+      const projects = await database('projects').where('name', 'like', name).select();
+      return response.status(200).json(projects);
+    }
     const projects = await database('projects').select();
     response.status(200).json(projects);
   }
