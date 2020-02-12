@@ -1,9 +1,15 @@
 language: node_js
 node_js:
-  - "node"
+- node
 services:
-  - postgresql
+- postgresql
 before_script:
-  - psql -c 'CREATE DATABASE travis_test;' -U postgres
+- psql -c 'CREATE DATABASE travis_test;' -U postgres
 notifications:
   email: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: LevGD8i30GZEHDHoClwEZQ3LvX1b7YWox2GFg7tgw9C3rOHrNo6W+RLEN03xyBLjoo5GEK5kO7ZS15eiavO4Yaam9LUWsSzJypvI2Hd/KjG7Rktw+GYeeF23hmW+k20FAwud+LTAPrFH3mTZKZMfUsYDmv2GeoBAQja4/QRhV5v1LOfb/oiXX/oAHVLKxF2JY8Pna74Kej/iGa0zpTsVVboTUmS4shuHpgbow5JXbc+ksKOsNujVxGPgb3kOiL+7eXE2K0FmH5+0+JJhe/sIQWG48YWk0SVS4L3s0AI8nZs1Sv4M+Md1L3bQ0XaFX7lAJzFSzntQ6C43Nd145OepiijmBUN1d7gW+i4SeO28dUFUJ4In+s9hgmGdbuk1kJAk7R+BLkeHp0UBhpxes5IfvAylqyh8bzs43XSJSwXYBiCm13wnJYECROXnwzlXZu47XQiAt3PwpyP2HO9yR6sePx5JcTI1ql6NxbEIqCi/1a6V9grVUCufDcEUaFWzaDfUJE4pVs7rUwEZxx+GQP5qqcgSVTZfKMvU2/Qii0yMGlgmr94AGp/7GS/JAbWmUsEg4B69gGvplXrHJkUb9GYbbRzU397+K+/sAJAgEyIH1cSEOiS3+gE2HBTXnG5cSKY1nSu/qpdkxvAgMWng8fKQu9OElcoS0Bte4WtgZ6qodiw=
+  app: palette-picker-ac
+  skip_cleanup: true
