@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "NODE_ENV=test mocha --forceExit"
+      "test": "jest --forceExit",
+      "test:watch": "jest --watchAll",
+      "start:prod": "babel-node server.js",
+      "start": "node server.js"
   },
   "keywords": [],
   "author": "",
